@@ -1,0 +1,120 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
+
+namespace ProjSicilynes.DAL
+{
+    internal class Connexion
+    {
+        private static Connexion connection = null;
+
+        private MySqlConnection mysqlCn;
+
+        private static readonly object mylock = new object();
+
+        private string connString;
+
+
+        private Connexion(string unProvider, string uneDataBase, string unUid, string unMdp)
+        {
+
+
+            try
+            {
+                connString = "SERVER=" + unProvider + ";" + "DATABASE=" +
+                uneDataBase + ";" + "UID=" + unUid + ";" + "PASSWORD=" + unMdp + ";";
+                try
+                {
+                    mysqlCn = new MySqlConnection(connString);
+                }
+                catch (Exception unSecteur)
+                {
+                   throw(unSecteur);
+                }
+            }
+            catch (Exception unSecteur)
+            {
+                throw (unSecteur);
+            }
+
+
+
+        }
+
+
+
+        /**
+         * méthode de création d'une instance de connexion si elle n'existe pas (singleton)
+         */
+        public static Connexion getInstance(string unProvider, string uneDataBase, string unUid, string unMdp)
+        {
+
+            lock ((mylock))
+            {
+
+                try
+                {
+
+
+                    if (null == connection)
+                    { // Premier appel
+                        connection = new Connexion(unProvider, uneDataBase, unUid, unMdp);
+                        
+                    }
+
+                }
+                catch (Exception unSecteur)
+                {
+                    throw (unSecteur);
+
+
+                }
+                return connection;
+
+            }
+        }
+
+
+
+
+
+        /**
+         * Ouverture de la connexion
+         */
+        public void openConnection()
+        {
+            try
+            {
+                mysqlCn.Open();
+            }
+            catch (Exception unSecteur)
+            {
+                throw (unSecteur);
+            }
+        }
+
+        /**
+         * Fermeture de la connexion
+         */
+        public void closeConnection()
+        {
+            if (mysqlCn.State == System.Data.ConnectionState.Open)
+                mysqlCn.Close();
+        }
+
+        /**
+         * Exécutiuon d'une requête
+         */
+        public MySqlCommand reqExec(string req)
+        {
+            MySqlCommand mysqlCom = new MySqlCommand(req, this.mysqlCn);
+            return (mysqlCom);
+        }
+
+
+    }
+
+}
