@@ -4,12 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
+using ProjSicilynes.Modele;
 
-namespace ProjSicilynes.DAL
+namespace ProjSicilynes
 {
-    internal class Connexion
+    /**
+     * Classe de connexion à une base de données
+     */
+    public class ConnexionSql
     {
-        private static Connexion connection = null;
+        private static ConnexionSql connection = null;
 
         private MySqlConnection mysqlCn;
 
@@ -18,7 +22,7 @@ namespace ProjSicilynes.DAL
         private string connString;
 
 
-        private Connexion(string unProvider, string uneDataBase, string unUid, string unMdp)
+        private ConnexionSql(string unProvider, string uneDataBase, string unUid, string unMdp)
         {
 
 
@@ -32,7 +36,7 @@ namespace ProjSicilynes.DAL
                 }
                 catch (Exception unSecteur)
                 {
-                   throw(unSecteur);
+                    throw (unSecteur);
                 }
             }
             catch (Exception unSecteur)
@@ -49,7 +53,7 @@ namespace ProjSicilynes.DAL
         /**
          * méthode de création d'une instance de connexion si elle n'existe pas (singleton)
          */
-        public static Connexion getInstance(string unProvider, string uneDataBase, string unUid, string unMdp)
+        public static ConnexionSql getInstance(string unProvider, string uneDataBase, string unUid, string unMdp)
         {
 
             lock ((mylock))
@@ -61,8 +65,8 @@ namespace ProjSicilynes.DAL
 
                     if (null == connection)
                     { // Premier appel
-                        connection = new Connexion(unProvider, uneDataBase, unUid, unMdp);
-                        
+                        connection = new ConnexionSql(unProvider, uneDataBase, unUid, unMdp);
+
                     }
 
                 }

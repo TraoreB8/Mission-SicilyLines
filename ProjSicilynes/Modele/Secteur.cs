@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjSicilynes.DAL;
 
 namespace ProjSicilynes.Modele
 {
@@ -10,6 +11,10 @@ namespace ProjSicilynes.Modele
     {
         private int id;
         private string nom;
+
+        public Secteur()
+        {
+        }
 
         public Secteur(int unId, string unNom)
         {
@@ -23,7 +28,7 @@ namespace ProjSicilynes.Modele
         public int Id { get => id; }
 
         // pour afficher la liste par la suite
-        public string Description
+        public virtual string Description
         {
             get => "Id : " + this.id + " Nom :" + this.nom;
         }
